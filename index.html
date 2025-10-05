@@ -1,0 +1,256 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Stella and Space Weather — Interactive Story</title>
+  <style>
+    :root{--bg:#0b1020;--card:#0f1724;--accent:#ff8c42;--accent2:#66d9ff;--muted:#b8c0cf}
+    html,body{height:100%;margin:0;font-family:Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial;color:#e6eef8;background:linear-gradient(180deg,#030416 0%, #07102a 60%);}
+    .wrap{max-width:1100px;margin:24px auto;padding:20px}
+    header{display:flex;align-items:center;gap:16px}
+    header h1{font-size:1.6rem;margin:0}
+    .controls{margin-left:auto;display:flex;gap:8px}
+    button{background:var(--accent);border:0;padding:8px 12px;border-radius:10px;color:#07102a;font-weight:600;cursor:pointer}
+    .grid{display:grid;grid-template-columns:1fr 360px;gap:18px;margin-top:16px}
+    .card{background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));padding:16px;border-radius:12px;box-shadow:0 6px 20px rgba(2,6,23,0.6);}
+    .story{min-height:520px;padding:18px;overflow:auto}
+    .page{display:none}
+    .page.active{display:block}
+    .nav{display:flex;justify-content:space-between;margin-top:12px}
+    .stella{display:flex;align-items:center;gap:12px}
+    .avatar{width:86px;height:86px;border-radius:50%;background:linear-gradient(135deg,#ffb86b,#ff6b6b);display:flex;align-items:center;justify-content:center;font-weight:800;color:#081328;font-size:26px}
+    .bubble{background:#08213a;padding:12px;border-radius:12px;color:var(--muted);}
+    .interactive{display:flex;flex-direction:column;gap:10px}
+    .fact{background:rgba(255,255,255,0.02);padding:10px;border-radius:8px}
+    .quiz{margin-top:12px}
+    label{display:block;margin-bottom:8px}
+    .gloss{color:var(--accent2);text-decoration:underline dotted;cursor:help}
+    footer{margin-top:18px;color:var(--muted);font-size:13px;text-align:center}
+    img.story-img {width: 400px;height: 250px;object-fit: cover}
+    #aurora{width:100%;height:160px;border-radius:8px;background:linear-gradient(180deg,#001a2b,#001c35);display:block}
+    @media (max-width:980px){.grid{grid-template-columns:1fr;}.controls{display:none}}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div>
+        <h1>Stella and Space Weather — Interactive Story</h1>
+        <div style="color:var(--muted);font-size:13px">Learn by playing: auroras, solar flares, satellites, and how magnetic fields protect us.</div>
+      </div>
+      <div class="controls">
+        <button id="ttsStopBtn" style="background:var(--muted);color:#07102a;">🛑 Stop</button>
+        <button id="ttsBtn">🔊 Listen</button>
+        <button id="downloadBtn">📄 Download PDF</button>
+      </div>
+    </header>
+
+    <div class="grid">
+      <main class="card story" aria-live="polite">
+        <section id="page1" class="page active">
+          <h2>Chapter 1 — The Birth of the Sun</h2>
+          <p>Once upon a time in the heart of the space,
+             there was a giant star that we called the sun; 
+             it was born from a very big cloud, that was so 
+             heavy that its own weight caused it to squeeze and 
+             get smaller. It started spinning very very fast, 
+             so fast that it flattened into a hot, flat circle. 
+             As time passed it turned into the sun..</p>
+          <img src="images/sol.jpg" alt="Sun" class="story-img" />
+        </section>
+
+        <section id="page2" class="page">
+          <h2>Chapter 2 — Stella's Storm</h2>
+          <div class="stella">
+            <div class="avatar">S</div>
+            <div class="bubble">
+              <strong>Hello — I'm Stella</strong><br>
+              <span style="color:var(--muted);font-size:14px">My name is Stella, I am a solar flare. 
+                I'm going to explain how my existence affects the Earth!</span>
+            </div>
+          </div>
+          <img src="images/llamarada1.jpg" alt="" class="story-img" />
+          <p>One day the sun got very angry because it was too hot, 
+            so it expelled particles, energy, material and magnetic 
+            fields towards the solar system causing a solar storm that 
+            looked like a mess of hair. </p>
+          <img src="images/choqueLlamarada.jpg" alt="Solar flare impact" class="story-img" />
+        </section>
+
+        <section id="page3" class="page">
+          <h2>Chapter 3 — What is Space Weather?</h2>
+          <p>Space weather is the activity between the Sun and near-Earth 
+            space that can affect society. The Sun constantly releases particles called 
+            **solar wind**. If the Sun blows gently, space weather is calm; if it blows hard, 
+            space weather becomes unsettled.</p>
+          <img src="images/Aurora.jpg" alt="Aurora borealis" class="story-img" />
+          <div class="interactive">
+            <div class="fact">Activity: move the Sun's intensity and observe the aurora.</div>
+            <input id="intensity" type="range" min="0" max="100" value="20">
+            <div id="intensityLabel">Intensity: 20</div>
+            <canvas id="aurora" role="img" aria-label="Aurora simulation"></canvas>
+          </div>
+        </section>
+
+        <section id="page4" class="page">
+          <h2>Chapter 4 — Effects on Earth and Technology</h2>
+          <p>During the first 8 minutes of an intense flare, radiation (like X-rays) 
+            is emitted that can heat the ionosphere and cause interference in HF radio signals.</p>
+          <p>Flares and Coronal Mass Ejections (CMEs) can also damage *electronic systems*, 
+            affect satellites, GPS, and even hospital equipment.</p>
+          <img src="images/aparatosElectronicos.jpg" alt="Affected electronic devices" class="story-img" />
+          <img src="images/tierraSatelites1.jpg" alt="Satellites around Earth" class="story-img" />
+          <div class="quiz card">
+            <h3>Short Quiz</h3>
+            <div>
+              <label>1) What are the particles the Sun blows called?</label>
+              <div><label><input name="q1" type="radio" value="a"> A) Cosmic rain</label></div>
+              <div><label><input name="q1" type="radio" value="b"> B) Solar wind</label></div>
+              <div><label><input name="q1" type="radio" value="c"> C) Neutrinos only</label></div>
+            </div>
+            <div style="margin-top:8px"><button id="gradeBtn">Grade</button> <span id="score"></span></div>
+          </div>
+        </section>
+
+        <section id="page5" class="page">
+          <h2>Chapter 5 — Monitoring and Forecasting</h2>
+          <p>Humans have placed satellites and observation centers 
+            to monitor the Sun. Some missions and agencies that help 
+            predict and issue alerts are:</p>
+          <ul>
+            <li>**STEREO** — NASA mission with two satellites.</li>
+            <li>**NOAA** — Space Weather Prediction Center.</li>
+          </ul>
+          <img src="images/tierraSatelites2.jpg" alt="Satellites observing Earth" class="story-img" />
+          <p>Thanks to these tools, measures can be taken to protect satellites, power grids, and sensitive equipment.</p>
+        </section>
+
+        <section id="page6" class="page">
+          <h2>End — Stella's Reflection</h2>
+          <p>Ah (Stella sighs) — although I might be evil in the story, 
+            Earth is protected by its magnetic field. If it didn't exist, 
+            many electronic devices would be instantly damaged. So, Stella 
+            flew across the universe and left those humans on Earth in peace.</p>
+          <img src="images/tierraCampos.jpg" alt="Earth's magnetic field" class="story-img" />
+          <p style="font-weight:700;color:var(--accent)">Thank you for reading! Do you want to repeat, listen, or review the quiz once more?</p>
+        </section>
+
+        <div class="nav">
+          <div>
+            <button id="prev">⬅️ Previous</button>
+            <button id="next">Next ➡️</button>
+          </div>
+          <div style="color:var(--muted);font-size:13px">Page <span id="pageNum">1</span> / 6</div>
+        </div>
+      </main>
+
+      <aside class="card">
+        <h3>Tools</h3>
+        <div style="margin-top:8px">
+          <button id="showGloss">🛈 Glossary</button>
+          <button id="showTips">🔧 Tips</button>
+        </div>
+        <div id="panelContent" style="margin-top:12px">
+          <div id="glossary" class="fact">
+            <h4>Glossary</h4>
+            <p><strong>Solar wind</strong>: flow of particles from the Sun.</p>
+            <p><strong>Aurora</strong>: lights in the sky caused by solar particles and the atmosphere.</p>
+            <p><strong>CME</strong>: Coronal Mass Ejection, giant clouds of plasma launched by the Sun.</p>
+          </div>
+          <div id="tips" class="fact" style="display:none">
+            <h4>Safety Tips</h4>
+            <ol>
+              <li>For satellite operators: put satellites in safe mode.</li>
+              <li>For power grids: reduce load and monitor transformers.</li>
+              <li>For users: maintain backups and protect sensitive equipment.</li>
+            </ol>
+          </div>
+        </div>
+      </aside>
+    </div>
+
+    <footer class="card">
+      <small>Created from the story provided by the user. Educational content — designed for primary and secondary school.</small>
+    </footer>
+  </div>
+
+  <script>
+    const pages = Array.from(document.querySelectorAll('.page'));
+    let idx = 0;
+    const pageNum = document.getElementById('pageNum');
+    // Function to show the current page number
+    function show(i){pages.forEach(p=>p.classList.remove('active'));pages[i].classList.add('active');pageNum.textContent=(i+1);}
+    document.getElementById('next').onclick = ()=>{if(idx<pages.length-1) idx++; show(idx)};
+    document.getElementById('prev').onclick = ()=>{if(idx>0) idx--; show(idx)};
+
+    // TTS with a clear female voice
+    const ttsBtn = document.getElementById('ttsBtn');
+    const ttsStopBtn = document.getElementById('ttsStopBtn');
+
+    ttsBtn.onclick = ()=>{
+      const s = new SpeechSynthesisUtterance();
+      s.lang='en-US'; // Changed language to English (US)
+      // Select an English voice available in the browser
+      const voices = speechSynthesis.getVoices();
+      const female = voices.find(v=>v.lang.startsWith('en') && v.name.toLowerCase().includes('female')) || voices.find(v=>v.lang.startsWith('en'));
+      if(female) s.voice = female;
+      s.rate = 0.95; 
+      s.pitch = 1.1; 
+      s.text = pages[idx].innerText.replace(/\s+/g,' ');
+      speechSynthesis.cancel();
+      speechSynthesis.speak(s);
+    }
+    
+    // Function to stop audio playback
+    ttsStopBtn.onclick = ()=>{
+        speechSynthesis.cancel();
+    }
+
+
+    // Aurora simulation
+    const intensity = document.getElementById('intensity');
+    const intensityLabel = document.getElementById('intensityLabel');
+    const aur = document.getElementById('aurora');
+    const actx = aur.getContext('2d');
+    intensity.oninput = ()=>{intensityLabel.textContent = 'Intensity: '+intensity.value; drawAurora();} // Translated 'Intensidad'
+
+    function drawAurora(){
+      const w = aur.width = aur.clientWidth*devicePixelRatio;
+      const h = aur.height = aur.clientHeight*devicePixelRatio;
+      actx.clearRect(0,0,w,h);
+      const strength = +intensity.value/100;
+      for(let i=0;i<6;i++){
+        const grad = actx.createLinearGradient(0, h*(0.2+i*0.12),0,h);
+        grad.addColorStop(0,'rgba(0,0,0,0)');
+        grad.addColorStop(0.4,'rgba(10,150,120,'+(0.02+strength*0.6)+')');
+        grad.addColorStop(1,'rgba(0,0,0,0)');
+        actx.fillStyle = grad;
+        actx.beginPath();
+        actx.moveTo(0,h*(0.1+i*0.12));
+        for(let x=0;x<w;x+=20){
+          const y = h*(0.12+i*0.12) + Math.sin((x+i*10)/100 + Date.now()/800)*h*0.02*(1+strength*4);
+          actx.lineTo(x,y);
+        }
+        actx.lineTo(w,h);
+        actx.lineTo(0,h);
+        actx.closePath();
+        actx.fill();
+      }
+    }
+    drawAurora(); setInterval(drawAurora,100);
+
+    // Quiz grading
+    document.getElementById('gradeBtn').onclick = ()=>{
+      const q1 = document.querySelector('input[name=q1]:checked');
+      let score = 0; if(q1 && q1.value==='b') score+=1;
+      document.getElementById('score').textContent = `Score: ${score}/1`; // Translated 'Puntuación'
+    }
+
+    document.getElementById('showGloss').onclick = ()=>{document.getElementById('glossary').style.display='block';document.getElementById('tips').style.display='none'};
+    document.getElementById('showTips').onclick = ()=>{document.getElementById('glossary').style.display='none';document.getElementById('tips').style.display='block'};
+
+    document.getElementById('downloadBtn').onclick = ()=>{const url='downloads/stella-cuento-espacial.pdf';window.open(url,'_blank')};
+
+    document.addEventListener('keydown', e=>{if(e.key==='ArrowRight') document.getElementById('next').click(); if(e.key==='ArrowLeft') document.getElementById('prev').click();});
+  </script>
