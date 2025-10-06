@@ -73,3 +73,6 @@ violeta sofia fregoso ramos
 leonela guadalupe gutierrez martinez 
 
 https://github.com/milanjos
+
+License
+This project is licensed under the MIT License - see the LICENSE file for details.
